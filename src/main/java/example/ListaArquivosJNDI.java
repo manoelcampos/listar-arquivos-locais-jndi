@@ -6,6 +6,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import java.io.File;
 import java.util.Hashtable;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Hashtable;
  * como listar arquivos locais usando a API  Java Naming and Directory Interface (JDNI).
  * @author Manoel Campos
  */
-public class Main {
+public class ListaArquivosJNDI {
     /**
      * Caminho do diretório local para listar arquivos (poderia ser um diretório remoto se, por exemplo,
      * um provedor de Network File System (NFS) fosse utilizado.
@@ -28,10 +29,6 @@ public class Main {
     private static final String initialContextFactoryClassName = "com.sun.jndi.fscontext.RefFSContextFactory";
 
     public static void main(String[] args) {
-        listarArquivosLocaisComJDNI();
-    }
-
-    private static void listarArquivosLocaisComJDNI() {
         // Configurações do ambiente JNDI
         final var env = new Hashtable<String, String>();
 
@@ -45,7 +42,10 @@ public class Main {
             // Percorre a lista de arquivos obtidos
             while (list.hasMore()) {
                 Binding binding = list.next();
-                System.out.println(binding.getName());
+                if(binding.getObject() instanceof File f){
+                    System.out.printf("%s: %.2f KB%n", f.getName(), f.length()/1024.0);
+                }
+                else System.out.println(binding.getName());
             }
 
             /*Fecha o contexto, liberando recursos.
@@ -53,7 +53,7 @@ public class Main {
             * automaticamente pois as interfaces Context e DirContext não implementam AutoCloseable.*/
             context.close();
         } catch (NamingException e) {
-            System.err.println("Erro ao tentar acessar arquivos no serviço de diretório: " + e.getMessage());
+            System.err.println("Erro no serviço de nomes: " + e.getMessage());
         }
     }
 
