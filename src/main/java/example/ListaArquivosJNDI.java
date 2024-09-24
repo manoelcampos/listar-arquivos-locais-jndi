@@ -4,7 +4,6 @@ import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import java.io.File;
 import java.util.Hashtable;
@@ -36,8 +35,8 @@ public class ListaArquivosJNDI {
         env.put(Context.PROVIDER_URL, "file:" + directoryPath);
 
         try {
-            DirContext context = new InitialDirContext(env);
-            NamingEnumeration<Binding> list = context.listBindings("");
+            final var context = new InitialDirContext(env);
+            final NamingEnumeration<Binding> list = context.listBindings("");
 
             // Percorre a lista de arquivos obtidos
             while (list.hasMore()) {

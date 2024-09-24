@@ -2,7 +2,6 @@ package example;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +37,7 @@ public class ProcuraArquivoJNDI {
         env.put(Context.PROVIDER_URL, "file:" + directoryPath);
 
         try {
-            DirContext context = new InitialDirContext(env);
+            final var context = new InitialDirContext(env);
             final var readmeFile = (File)context.lookup("README.md");
             try(final var reader = new BufferedReader(new FileReader(readmeFile))){
                 String linha;
